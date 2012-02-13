@@ -1,0 +1,41 @@
+{% load cart_filters  %}
+<div id="sidebar" class="alignleft">
+	{% cart_box request %}
+	<div id="menu_block">
+		<i class="top_corn"></i>
+		<i class="bot_corn"></i>
+		<ul class="menu_sidebar">
+        {% for section in sections %}
+   				{% if not section.category_set.all.0.name == section.name %}
+   						{% if section.get_absolute_url == request_path %}
+                            <li class="active"> <span>{{ section.name }}</span>
+                        {% else %}
+                            <li> <a href="{{ section.get_absolute_url }}" title="">{{ section.name }}</a>
+                        {% endif %}
+   						<ul>
+                    {% for category in section.category_set.all %}
+                        {% if category.is_active %}
+                         {% if category.get_absolute_url == request_path %}
+                            <li class="active"><span>{{ category.name }}</span></li>
+                         {% else %}
+                            <li><a href="{{ category.get_absolute_url }}" title="">{{ category.name }}</a></li>
+                         {% endif %}
+                        {% endif %}
+                    {% endfor %}
+       					</ul>
+				{% else %}
+                    {% if section.category_set.all.0.get_absolute_url == request_path %}
+                        <li class="active"> <span>{{ section.category_set.all.0.name }}</span></li>
+                    {% else %}
+                    {% endif %}
+			    {% endif %}
+            {% endfor %}
+		</ul>
+	</div>
+	<div id="sub_slider">
+		<form id="search" action="#">
+			<input id="s" type="text" onfocus="if(this.value=='Введите слово') this.value='';" onblur="if(this.value=='') this.value='Введите слово';" value="Введите слово" name="s">
+			<input class="go" type="submit" value="">
+		</form>
+	</div>
+</div>

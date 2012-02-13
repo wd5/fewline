@@ -1,5 +1,5 @@
           # -*- coding: utf-8 -*-
-# Django settings for cctvision project
+# Django settings for fewline project
 import os
 
 DEBUG = False
@@ -81,10 +81,10 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'cctvision.ReferMiddleware.ReferMiddleware',
+#    'fewline.ReferMiddleware.ReferMiddleware',
 )
 
-ROOT_URLCONF = 'cctvision.urls'
+ROOT_URLCONF = 'fewline.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'templates')
@@ -100,18 +100,17 @@ INSTALLED_APPS = (
     'grappelli',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
-    'cctvision.catalog',
-    'cctvision.cart',
-    'cctvision.myadmin',
-    'cctvision.blog',
-    'cctvision.projects',
+    'fewline.catalog',
+    'fewline.cart',
+    'fewline.myadmin',
+    'fewline.blog',
     'filebrowser',
 #    'tinymce',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
 
-GRAPPELLI_ADMIN_TITLE = 'Видеонаблюдение'
+GRAPPELLI_ADMIN_TITLE = 'Fewline'
 FILEBROWSER_DIRECTORY = './'
 FILEBROWSER_VERSIONS = {
     'admin_thumbnail': {'verbose_name': 'Admin Thumbnail', 'width': 60, 'height': 60, 'opts': 'crop'},

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load catalog_filters %}
+{% load cart_filters  %}
+{% block site_wrapper %}
+{% category_list request %}
+<div id="content_block" class="alignleft clearfix">
+        <div id="content">
+		<div id="Breadcrumbs">
+                <a href="/">Главная</a> {% if section %}»&nbsp;{{ section.name }}{% else %}{% if not category.section.slug == category.slug %}»&nbsp;<a href="/cats/{{ category.section.slug }}">{{ category.section.name }}</a>{% endif %} »&nbsp;{{ category.name }} {% endif %}
+		</div>
+		<h1 id="page_title">{{ section.name }}</h1>
+		<div id="items" class="clearfix">
+			{% for cat in cats %}
+				<div class="item">
+					<div class="img_block" style="background-image: url({{ cat.image.url }})">
+						<i class="corns lt_corn"></i><i class="corns rt_corn"></i><i class="corns lb_corn"></i><i class="corns rb_corn"></i>
+						<a href="{{ cat.get_absolute_url }}"></a>
+					</div>
+				    <a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a>
+				</div>
+			{% endfor %}
+		</div>
+		<div id="cont_discr" class="clearfix">
+            {{ section.SEO_text|safe }}
+		</div>
+{% endblock %}
+

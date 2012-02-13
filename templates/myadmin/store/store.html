@@ -1,0 +1,54 @@
+{% extends "myadmin/base.html" %}
+{% block site_wrapper %}
+{% load myadmin_tags %}
+	{% menu request %}
+    <form action="/myadmin/store/" method="POST">{% csrf_token %}
+        <select name="category_select" data-placeholder="Выберите категорию товара" style="width:350px;" class="chzn-select" multiple tabindex="6">
+            <option value=""></option>
+            {% for section in sections %}
+            <optgroup label="{{ section.name }}">
+                {% for category in section.category_set.all %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </optgroup>
+            {% endfor %}
+        </select>
+    <input type="submit" value="Submit" />
+    {% if category_select %}
+        Выбранные категории: {% for category in category_select %} {{ category.name }}{% if forloop.last %}.{% else %},{% endif %}{% endfor %}
+    {% endif %}
+
+    </form>
+	<table id="allsales" cellpadding="5px" cellspacing="0">
+		<tr style="background:#cccccc;" class="textcenter">
+			<td class="bottomborder rightborder">
+				Наименование
+			</td>
+	        <td class="bottomborder rightborder">
+	            Количество
+	        </td>
+	        <td class="bottomborder rightborder">
+	            Розничная цена
+	        </td>
+			<td class="bottomborder">
+				Цена закупки
+			</td>
+		<tr>
+		{% for product in products %}
+		<tr class="clientinfo">
+			<td class="bottomborder rightborder">
+				{{ product.name }}
+			</td>
+	        <td class="quantity bottomborder rightborder textcenter">
+	            {{ product.quantity }}
+	        </td>
+			<td class="bottomborder rightborder textcenter">
+	            {{ product.price }}
+			</td>
+	        <td class="bottomborder textcenter">
+	            {{ product.wholesale_price }}
+	        </td>
+		</tr>
+		{% endfor %}
+	</table>
+{% endblock %}
