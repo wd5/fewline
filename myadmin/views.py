@@ -237,12 +237,13 @@ def edit_client(request, id):
 
 @login_required
 def store(request):
-    sections = Section.objects.all().exclude(slug="cctv-komplekt")
+    sections = Section.objects.all()
     if request.method == "POST":
         category_select = Category.objects.filter(id__in = request.POST.getlist("category_select"))
         products = Product.objects.filter(category__in = category_select)
         return render_to_response("myadmin/store/store.html", locals(), context_instance=RequestContext(request))
-    products = Product.objects.filter(quantity__gt=0).exclude(slug="cctv-komplekt")
+    #products = Product.objects.filter(quantity__gt=0).exclude(slug="cctv-komplekt")
+    products = Product.objects.all()
     return render_to_response("myadmin/store/store.html", locals(), context_instance=RequestContext(request))
 
 @login_required
@@ -256,17 +257,17 @@ def allstore(request):
     return render_to_response("myadmin/store/store.html", locals(), context_instance=RequestContext(request))
 
 @login_required
-def filterstore(request):
-    try:
-        category = Category.objects.get(slug=category_slug)
-        products = category.product_set.all().order_by('categoryproduct__position')
-    except :
-        section = get_object_or_404(Section, slug=category_slug)
-        category = section.category_set.all()
-        products = []
-        for cat in category:
-            products += cat.product_set.all().order_by('categoryproduct__position')
-    return render_to_response("myadmin/store/store.html", locals(), context_instance=RequestContext(request))
+def change_product_field(request):
+    if request.method == 'POST':
+        product = Product.objects.get(id=request.POST['id'])
+        if request.POST['field'] == 'quantity':
+            product.quantity = request.POST['val']
+        elif request.POST['field'] == 'price':
+            product.price = request.POST['val']
+        elif request.POST['field'] == 'wholesale_price':
+            product.wholesale_price = request.POST['val']
+        product.save()
+        return HttpResponse(status=200)
 
 @login_required
 def cash(request, when):
