@@ -57,6 +57,11 @@ def show_product(request, product_slug):
     sections = Section.objects.all()
     return render_to_response("main/tovar.html", locals(), context_instance=RequestContext(request))
 
+def search(request):
+    search_world = request.GET['s']
+    product = Product.objects.filter(name__contains=search_world)
+    return render_to_response("main/search_result.html", locals(), context_instance=RequestContext(request))
+
 def about(request):
     page_title = u'О нас - Fewline'
     return render_to_response('main/about.html', locals(), context_instance=RequestContext(request))
