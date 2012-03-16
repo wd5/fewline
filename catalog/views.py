@@ -26,58 +26,11 @@ def cats(request):
     return render_to_response("main/cats.html", locals(), context_instance=RequestContext(request))
 
 def show_category(request, category_slug):
-    if (category_slug == 'street-analog') or (category_slug == 'domical-analog') or (category_slug == 'mini-analog'):
-        filter = True
     category = Category.objects.get(slug=category_slug)
-#    all_features = Feature.objects.filter(item__category__slug=category_slug)
-#    features_dict = OrderedDict()
-#    for feature in all_features:
-#        values = features_dict.get(feature.name.name, [])
-#        try:
-#            values.sort()
-#        except :
-#            pass
-#        try:
-#            if feature.value.value not in features_dict[feature.name.name]:
-#                features_dict[feature.name.name] = values + [feature.value.value]
-#        except:
-#            features_dict[feature.name.name] = values + [feature.value.value]
     if request.method == 'POST':
-        if 'product_slug' in request.POST:
-            cart.add_to_cart(request)
-            url = urlresolvers.reverse('show_cart')
-            return HttpResponseRedirect(url)
-        else:
-            options = request.POST.getlist('option')
-            for option in options:
-                features_dict2 = {}
-                category = Category.objects.get(slug=category_slug)
-                for option in request.POST.getlist('option'):
-                    values = features_dict2.get(option.split(':')[0], [])
-                    try:
-                        if option.split(':')[1] not in features_dict2[option.split(':')[0]]:
-                            features_dict2[option.split(':')[0]] = values + [option.split(':')[1]]
-                    except:
-                        features_dict2[option.split(':')[0]] = values + [option.split(':')[1]]
-                kwargs = {}
-                counter = 0
-                args = Q()
-                for name, values in features_dict2.items():
-                    if name == 'resolution':
-                        args &= ( Q( resolution1__in = values ) | Q( resolution2__in = values ) )
-                    elif name == 'sensitivity':
-                        args &= ( Q( sensitivity1__in = values ) | Q( sensitivity2__in = values ) )
-                    elif (name == 'type') and ('color' in values):
-                        for value in values:
-                            if value == 'color':
-                                args &= ( Q( type = value ) | Q( type = 'day-night' ) )
-                            else:
-                                kwargs[str(name) + '__in'] = values
-                    else:
-                        kwargs[str(name) + '__in'] = values
-                products = CameraProduct.objects.filter(category=category).filter(args,**kwargs)
-            if not options:
-                products = category.product_set.filter(is_active=True).order_by('categoryproduct__position')
+        cart.add_to_cart(request)
+        url = urlresolvers.reverse('show_cart')
+        return HttpResponseRedirect(url)
     else:
         products = category.product_set.filter(is_active=True).order_by('categoryproduct__position')
     if category.section.name == category.name:
@@ -86,17 +39,9 @@ def show_category(request, category_slug):
         page_title = u'%s %s - Цептум' % (category.section, category)
     meta_keywords = category.meta_keywords
     meta_description = category.meta_descriotion
-#        except :
-#            section = Section.objects.get(slug=category_slug)
-#            category = section.category_set.filter(is_active=True)
-#            page_title = "%s" % section
-#            products = []
-#            for cat in category:
-#                products += cat.product_set.filter(is_active=True).order_by('categoryproduct__sort_number')
-    if category.slug == 'cctv-komplekt':
-        return render_to_response("main/catalog-komlpekt.html", locals(), context_instance=RequestContext(request))
-    else:
-        return render_to_response("main/catalog.html", locals(), context_instance=RequestContext(request))
+    meta_keywords = category.meta_keywords
+    sections = Section.objects.filter(is_active=True)
+    return render_to_response("main/catalog.html", locals(), context_instance=RequestContext(request))
 
 
 def show_section(request, section_slug):
