@@ -59,7 +59,7 @@ def show_product(request, product_slug):
 
 def search(request):
     search_world = request.GET['s']
-    product = Product.objects.filter(name__contains=search_world)
+    products = Product.objects.filter(name__contains=search_world)
     return render_to_response("main/search_result.html", locals(), context_instance=RequestContext(request))
 
 def about(request):
