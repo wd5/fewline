@@ -3,7 +3,7 @@ from models import CartItem, Client, CartProduct
 from catalog.models import *
 from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail
-import threading, urllib2, urllib
+import urllib2, urllib
 from hashlib import md5
 import decimal
 import random
@@ -170,29 +170,23 @@ def send_admin_email(request, cart_items, form, cart_subtotal, discount):
     for item in cart_items:
         products_for_email += u"%s:%s шт  http://ceptum.ru%s\n" % (item.product.name,
                                           item.quantity, item.product.get_absolute_url())
-    t = threading.Thread(target= send_mail, args=[
-        u'Заказ от %s %s' % (form.cleaned_data['name'], form.cleaned_data['surname'] ),
+    send_mail(u'Заказ от %s %s' % (form.cleaned_data['name'], form.cleaned_data['surname'] ),
         u'Имя: %s %s %s \nГород: %s\nИндекс: %s\nТелефон: %s\nАдрес: %s\nEmail: %s\n\n%s\nВсего на сумму: %s руб\nСкидка: %s руб\n\nПришел с: %s'
         % (form.cleaned_data['surname'], form.cleaned_data['name'], form.cleaned_data['patronymic'],
         form.cleaned_data['city'], form.cleaned_data['postcode'], form.cleaned_data['phone'],
         form.cleaned_data['address'], form.cleaned_data['email'], products_for_email, cart_subtotal, discount, request.COOKIES.get('REFERRER', None) ),
-        EMAIL_HOST_USER, [EMAIL_HOST_USER], 'fail_silently=False'])
-    t.setDaemon(True)
-    t.start()
+        EMAIL_HOST_USER, [EMAIL_HOST_USER], 'fail_silently=False')
 
 # Высылает email клиенту о покупке
 def send_client_email(cart_items, form, cart_subtotal):
     products_for_email = ""
     for item in cart_items:
-        products_for_email += u"%s:%s шт  http://ceptum.ru%s\n" % (item.product.name,
-                                          item.quantity, item.product.get_absolute_url())
-    t = threading.Thread(target= send_mail, args=[
+        products_for_email += u"%s:%s шт  http://ceptum.ru%s\n" % (item.product.name, item.quantity, item.product.get_absolute_url())
+    send_mail = (
         u'Ваш заказ от cctvision',
         u'Здравствуйте %s,\n\nВы оформили у нас заказ на:\n%s\nВсего на сумму: %s руб\n\nВ ближайшее время наш менеджер с вами свяжется.\nС Уважением, my-spy.ru' %
         (form.cleaned_data['name'], products_for_email, cart_subtotal ),
-        EMAIL_HOST_USER, [form.cleaned_data['email']], 'fail_silently=False'])
-    t.setDaemon(True)
-    t.start()
+        EMAIL_HOST_USER, [form.cleaned_data['email']], 'fail_silently=False')
 
 # Высылает смс сообщение о покупке и покупателе
 def send_sms(cart_items, form):
