@@ -1,162 +1,18 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta name="description" content="{{ meta_description|striptags }}" />
-<meta name="keywords" content="{{ meta_keywords }}" />
-<title>{% block title %}{{ page_title }}{% endblock %}</title>
-<link rel="shortcut icon" href="{{ STATIC_URL }}res/img/favicon.ico" type="image/x-icon" />
-<link rel="stylesheet" href="{{ STATIC_URL }}css/style.css" type="text/css" media="screen" />
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.form.js"></script>
-<script type="text/javascript">
-    /* Ajax Django CSRF */
-    $(document).ajaxSend(function(event, xhr, settings) {
-        function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie != '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = jQuery.trim(cookies[i]);
-                    // Does this cookie string begin with the name we want?
-                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-        function sameOrigin(url) {
-            // url could be relative or scheme relative or absolute
-            var host = document.location.host; // host + port
-            var protocol = document.location.protocol;
-            var sr_origin = '//' + host;
-            var origin = protocol + sr_origin;
-            // Allow absolute or scheme relative URLs to same origin
-            return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
-                    (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
-                // or any other URL that isn't scheme relative or absolute i.e relative.
-                    !(/^(\/\/|http:|https:).*/.test(url));
-        }
-        function safeMethod(method) {
-            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-        }
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="description" content="{{ meta_description|striptags }}" />
+	<meta name="keywords" content="{{ meta_keywords }}" />
+	<title>{% block title %}{{ page_title }}{% endblock %}</title>
+	<link rel="shortcut icon" href="{{ STATIC_URL }}res/img/favicon.ico" type="image/x-icon" />
 
-        if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
-            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-        }
-    });
-	$(document).ready(function(){
-		$("#back-top").hide();
-		var checker = true,
-		$filter_help = $('.filt_title'),
-		$target_dscr;
-		$('#sidebar #menu_block .menu_sidebar .active').parents('ul').css({display:'block'});
-		$('#content_block').width($('#main_block').width()-200);
-		$(window).resize(function(){
-			$('#content_block').width($('#main_block').width()-200);
-		});
-		$('.prew_img_tov').hover(function(){
-		//	alert('!');
-			$(this).siblings('.img_block').children('img').attr('src', ($(this).attr('src')));
-		});
-		$('span.word_about').hover(function(){
-			$(this).children('.dscr_word').fadeIn(500);
-		},function(){
-			$(this).children('.dscr_word').fadeOut(500);
-		});
-		$('.subtitle span').click(function(){
-			if(checker){
-				checker = false;
-				$thisis = $(this).parent('p');
-				$target_ul = $thisis.siblings('.sublvl');
-				//$(this).parents('ul').children('li').children('.subtitle').not(this).siblings('.sublvl').slideUp(300);
-				$target_ul.slideToggle(300, function(){
-					checker = true;
-					if($target_ul.is(':hidden')){
-						$thisis.css({backgroundPosition: '-26px -17px'});
-					}else{
-						$thisis.css({backgroundPosition: '0px 5px'});
-					}
-				});
-			}
-		});
-		$('.subtitle input').click(function(){
-			$thisis = $(this);
-			$target_ul = $thisis.parent('p').siblings('.sublvl');
-			if($thisis.is(':checked')){
-				$target_ul.slideDown(300).find('input').attr('checked','checked');
-				$thisis.parent('p').css({backgroundPosition: '0px 5px'});
-			}else{
-				$target_ul.find('input').removeAttr('checked');
-			}
-		});
-		$('.sublvl').each(function(){
-			$target_ul = $(this);
-			$thisis = $(this).siblings('.subtitle');
-			$target_input = $target_ul.children('li').children('input');
-			$target_input.each(function(){
-				if($(this).attr('checked')){
-					$target_ul.show();
-				}
-			});
-			if($target_ul.is(':hidden')){
-				$thisis.css({backgroundPosition: '-26px -17px'});
-			}else{
-				$thisis.css({backgroundPosition: '0px 5px'});
-			}
-		});
-		$filter_help.hover(function(){
-			//alert($(this).parents('.filtr_item').index());
-			$(this).css({color:'#607890'});
-			$target_dscr = $('#filtr_discription div').eq($(this).parents('.filtr_item').index()-2);
-			$target_dscr.fadeIn(300);
-		},function(){
-			$(this).css({color:'#333'});
-			$target_dscr.fadeOut(50);
-		});
-		$(function(){
-	        $(window).scroll(function () {
-	            if ($(this).scrollTop() > 300) $("#back-top").fadeIn();
-	            else                           $("#back-top").fadeOut(400);
-	        });
-	        $('#back-top a').click(function () {
-	            $('body,html').animate({
-	                scrollTop: 0
-	            }, 800);
-	            return false;
-	        });
-		});
-		$('.call a').click(function(event){
-			$('#call_block').fadeIn(100);
-			event.preventDefault();
-		});
-		$('#call_block, #call_block .close').click(function(event){
-			$('#call_block').fadeOut(200);
-			event.stopPropagation();
-			event.preventDefault();
-		});
-		$('#call_form').click(function(event){
-			event.stopPropagation();
-		});
-		$("#popup_call").live("submit", function(event) {
-            var $target = $(this),
- 			send_data = $target.formSerialize(),
- 			send_url = $target.attr('action');
-            $.ajax({
-                type: 'POST',
-                url: send_url,
-                data: send_data,
-                success: function(){
-                    $('#call_block').fadeOut(200);
-                }
-            });
- 			event.preventDefault();
-        });
-	});
-</script>
+	<meta name="title" content="" />
+	<link href="{{ STATIC_URL }}res2/css/style.css" rel="stylesheet" type="text/css" />
+	<script src="{{ STATIC_URL }}res2/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="{{ STATIC_URL }}res2/js/jquery.form.js" type="text/javascript"></script>
+	<script src="{{ STATIC_URL }}res2/js/funcs.js" type="text/javascript"></script>
+</head>
 <body>
 <div id="fb-root"></div>
 <script>(function(d, s, id) {
@@ -166,110 +22,78 @@
   js.src = "//connect.facebook.net/ru_RU/all.js#xfbml=1";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
-<!--[if IE]>
-  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
-<!--[if lt IE 7 ]>
-	<script src="res/js/dd_belatedpng.js"></script>
-	<script>DD_belatedPNG.fix("img, .png_bg");</script>
-<![endif]-->
 {% load catalog_filters %}
 {% load cart_filters  %}
-	<div id="call_block">
-		<div id="call_form">
-			<a class="close"></a>
-			<form id="popup_call" action="take_form" method="post" accept-charset="UTF-8">{% csrf_token %}
-				<h3>Мы вам перезвоним</h3>
-				<div class="row">
-					<label>
-						Имя<span>*</span>:
-					</label>
-					<input id="popup_call_name" type="text" onclick="this.value='';" value="" name="name">
-				</div>
-				<div class="row">
-					<label>Телефон<span>*</span>:</label>
-					<input id="popup_call_phone" type="text" onclick="this.value='';" value="" name="phone">
-				</div>
-				<div class="p_ta ta_sm">
-					<label>Сообщение:</label>
-					<textarea id="popup_call_message" name="message"></textarea>
-				</div>
-				<em id="popup_call_err" style="opacity: 0; display: inline;"></em>
-				<input class="update_btn" type="submit" value="Отправить" name="sender"><br><br><br>
-                <p>Оставьте свой номер телефона и мы перезвоним вам в течении 30 минут если заявка была оставлена в рабочее время с 9 00 до 20 00.</p>
-			</form>
+<div class="page">
+	<div class="pg_in">
+		<div class="header">
+			<a href="/" class="logo"><img src="{{ STATIC_URL }}res2/img/logo.png" alt="" /></a>
+			<div class="txt">Мы верим в то, что можно делать бизнес честно, не обманывать на завышенных сметах, продаже ненужного оборудования, несуществующего программного обеспечения</div>
+			<div class="kont">
+				<span class="capt">Контактный телефон</span><br />
+				<span class="tel">+7 (465) 565-96-56</span><br />
+				<span class="rec" onclick="fn_rec_show()">Перезвонить вам</span>
+				<span class="dop">
+					<a href="mailto:info@fewline.ru">info@fewline.ru</a>
+					<a href="skype:fewline.ru" class="sk">fewline.ru</a>
+				</span>
+			</div>
+		</div>
+		<div class="nav">
+			<i class="u1"></i>
+			<i class="u2"></i>
+			<ul>
+				<li><a href="/"{% if request.path == '/' %} class="a"{% endif %}>ГЛАВНАЯ</a></li>
+				<li><a href="/delivery"{% if request.path == '/delivery' %} class="a"{% endif %}>ОПЛАТА</a></li>
+				<li><a href="/about"{% if request.path == '/about' %} class="a"{% endif %}>О НАС</a></li>
+				<li><a href="/blog/"{% if request.path == '/blog/' %} class="a"{% endif %}>БЛОГ</a></li>
+			</ul>
+		</div>
+		{% block site_wrapper %}
+		{% endblock %}
+		<div class="pg_u"><div class="in"><div><i class="u1"></i><i class="u2"></i></div></div></div>
+		<div id="back-top"><a href="#top"><span class="arrow"></span>Наверх</a></div>
+		<div class="rec_win" id="rec_win">
+			<div class="in">
+				<form id="popup_call" action="take_form" method="post" accept-charset="UTF-8">{% csrf_token %}
+					<div class="x" onclick="fn_rec_hide()"></div>
+					<div class="capt">Мы вам перезвоним</div>
+					<div class="lbl">
+						<p>Имя*:</p>
+						<input type="text" name="name" id="rec_name" />
+					</div>
+					<div class="lbl">
+						<p>Телефон*:</p>
+						<input type="text" name="phone" id="rec_phone" />
+					</div>
+					<div class="lbl">
+						<p>Сообщение:</p>
+						<textarea id="rec_message" name="message"></textarea>
+					</div>
+					<div class="btn">
+						<input type="image" value="Купить" name="submit" src="{{ STATIC_URL }}res2/img/send2.gif">
+					</div>
+					<div class="txt">Оставьте свой номер телефона и мы перезвоним вам в течении 30 минут если заявка была оставлена в рабочее время с 9 00 до 20 00.</div>
+				</form>
+			</div>
 		</div>
 	</div>
-	<div id="wrapper">
-		<header>
-			<div id="contacts">
-				<p class="call"><a href="#">Перезвонить</a></p>
-				<p class="phone">+7 (927) 442-17-77</p>
-				<p class="mail"><a href="mailto:info@fewline.ru">info@fewline.ru</a></p>
+</div>
+<div class="footer">
+	<div class="in">
+		<div class="in2">
+			<div class="pg_bott"><i class="u1"></i><i class="u2"></i></div>
+			<div class="counters">
+				<div class="c"><img src="{{ STATIC_URL }}res2/img/tmp1.gif" alt="" /></div>
+				<div class="c"><img src="{{ STATIC_URL }}res2/img/tmp2.gif" alt="" /></div>
 			</div>
-			<div id="cam_block">
-				{% if request.path == '/' %}
-				{% else %}
-					<a href="/" title="На главную"></a>
-				{% endif %}	
+			<i class="u1"></i><i class="u2"></i>
+			<div class="copy">
+				© fewline.ru, 2011–2012<br />
+				<a href="http://yula-group.ru/">Продвижение сайта</a> «Юла групп»
 			</div>
-			<div id="header_title">
-				<a href="/">
-					<img src="{{ STATIC_URL }}res/img/logo_title.png"/>
-				</a>
-				<div id="logo_dscr">
-                    Монтаж и установка систем видеонаблюдения.
-				</div>
-			</div>
-		</header>
-		<div id="main">
-			<div id="head_menu">
-				<ul class="menu">
-					<li class="menu_right">
-						{% if request.path == '/' %}
-							<span>Главная</span>
-						{% else %}
-							<a href="/">Главная</a>
-						{% endif %}
-					</li>
-					<li class="menu_right menu_left">
-						{% if request.path == '/delivery' %}
-							<span>Оплата и монтаж</span>
-						{% else %}
-							<a href="/delivery">Оплата и монтаж</a>
-						{% endif %}
-					</li>
-					<li class="menu_right menu_left">
-						{% if request.path == '/about' %}
-							<span>О нас</span>
-						{% else %}
-							<a href="/about">О нас</a>
-						{% endif %}
-					</li>
-                    <li class="menu_left">
-                    	{% if request.path == '/blog/' %}
-							<span>Блог</span>
-						{% else %}
-							<a href="/blog">Блог</a>
-						{% endif %}
-                    </li>
-				</ul>
-			</div>
-			<div id="main_block" class="clearfix">
-                {% block site_wrapper %}
-				<div id="content_block" class="alignleft clearfix">
-					<div id="content">
-		        		{% endblock %}
-		    			{% include "metrika.html" %}
-		    		</div>
-		    	</div>
-	    	</div>
-    	</div>
-    
-		<footer>
-			<p>&copy; ceptum.ru, 2011&#150;2012</p>
-			<p><a href="http://yula-group.ru">Продвижение сайта</a> &laquo;Юла групп&raquo;</p>
-		</footer>
+		</div>
 	</div>
+</div>
 </body>
 </html>

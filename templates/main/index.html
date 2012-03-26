@@ -2,47 +2,29 @@
 {% load catalog_filters %}
 {% load cart_filters  %}
 {% block site_wrapper %}
-{% category_list request %}
-<div id="content_block" class="alignleft clearfix">
-        <div id="content">
 
-		<h1 id="page_title">Каталог товара</h1>
-		<div id="items" class="clearfix">
+	{% cart_box request %}
+	{% category_list request %}
+	<div class="content">
+		<div class="breadcrumbs">
+			&nbsp;
+		</div>
+		<div class="cat-btns">
 			{% for section in sections %}
 	            {% if not section.category_set.all.0.name == section.name %}
-				<div class="item">
-					<div class="img_block" style="background-image: url({{ section.image.url }})">
-						<i class="corns lt_corn"></i><i class="corns rt_corn"></i><i class="corns lb_corn"></i><i class="corns rb_corn"></i>
-						<a href="{{ section.get_absolute_url }}"></a>
-					</div>
-				    <a href="{{ section.get_absolute_url }}">{{ section.name }}</a>
-				</div>
+					<a href="{{ section.get_absolute_url }}" style="background-image: url({{ section.image.url }})"><span>{{ section.name }}</span></a>
 	            {% else %}
-	            <div class="item">
-					<div class="img_block" style="background-image: url({{ section.image.url }})">
-						<i class="corns lt_corn"></i><i class="corns rt_corn"></i><i class="corns lb_corn"></i><i class="corns rb_corn"></i>
-						<a href="{{ section.category_set.all.0.get_absolute_url  }}"></a>
-					</div>
-				    <a href="{{ section.category_set.all.0.get_absolute_url }}">{{ section.name }}</a>
-				</div>
+					<a href="{{ section.category_set.all.0.get_absolute_url }}" style="background-image: url({{ section.image.url }})"><span>{{ section.name }}</span></a>
 	            {% endif %}
 			{% endfor %}
 		</div>
-		<div id="cont_discr" class="clearfix">
-		<div id="sub_verticalline">
-			<div><div></div></div>
-		</div>
-            <center><h1>Монтаж и установка систем видеонаблюдения в Москве</h1></center>
-            Мы верим в то, что можно делать бизнес честно, не обманывать на завышенных сметах, продаже ненужного оборудования, несуществующего
-            программного обеспечения, и мы не выставляем огромные цены за монтаж прикрываясь сложностью настройки оборудования.<br><br>
-            К сожалению на рынке видеонаблюдения постоянно обманывают клиентов, <strong>наше конкурентное преимущество - честность!</strong><br>
-            Покажите нам смету составленную вам другой компанией и в 99 случаев из 100 у нас будет на много дешевле.<br><br>
-            <strong>Компания «Цептум»</strong> рада предложить Вам только качественные системы видеонаблюдения.<br>
-            У нас имеются, как <strong>готовые комплекты оборудования</strong>, так и отдельные компоненты: <strong>камеры</strong>, <strong>видеорегистраторы</strong>, <strong>муляжи камер</strong> и различные комплектующие.<br><br>
-            <strong>Наши специалисты установят и настроят все необходимое оборудование в самые кратчайшие сроки.</strong>
-            Перед монтажом специалист прибудет к Вам для составления проекта с указанием необходимого оборудования и конечной стоимости.<br><br>
-            Монтаж видеонаблюдения и установка видеонаблюдения - наш профиль!<br><br>
-
-            <center><strong>Честны перед вами, как перед собой!</strong></center>
-		</div>
+		<h1>Монтаж и установка систем видеонаблюдения в Москве</h1>
+		<p>Мы верим в то, что можно делать бизнес честно, не обманывать на завышенных сметах, продаже ненужного оборудования, несуществующего программного обеспечения, и мы не выставляем огромные цены за монтаж прикрываясь сложностью настройки оборудования.</p>
+		<p>К сожалению на рынке видеонаблюдения постоянно обманывают клиентов, наше конкурентное преимущество - честность!<br />Покажите нам смету составленную вам другой компанией и в 99 случаев из 100 у нас будет на много дешевле.</p>
+		<p>Компания «Цептум» рада предложить Вам только качественные системы видеонаблюдения.<br />У нас имеются, как готовые комплекты оборудования, так и отдельные компоненты: камеры, видеорегистраторы, муляжи камер и различные комплектующие.</p>
+		<p>Наши специалисты установят и настроят все необходимое оборудование в самые кратчайшие сроки. Перед монтажом специалист прибудет к Вам для составления проекта с указанием необходимого оборудования и конечной стоимости.</p>
+		<p>Монтаж видеонаблюдения и установка видеонаблюдения - наш профиль!</p>
+		
+		{% include "metrika.html" %}
+	</div>
 {% endblock %}

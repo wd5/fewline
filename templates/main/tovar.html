@@ -2,125 +2,86 @@
 {% load catalog_filters %}
 {% load cart_filters  %}
 {% block site_wrapper %}
-<div id="sidebar" class="alignleft">
-    {% cart_box request %}
-    <div id="menu_block">
-        <i class="top_corn"></i>
-        <i class="bot_corn"></i>
-        <ul class="menu_sidebar">
-            {% for section in sections %}
-                {% if section.slug == product.category.all.0.section.slug %}
-                    <li class="active"> <a href="{{ section.get_absolute_url }}" title="">{{ section.name }}</a>
-                        <ul>
-                            {% for category in section.category_set.all %}
-                                {% if category.slug == product.category.all.0.slug %}
-                                    <li class="active"><a href="{{ category.get_absolute_url }}" title="">{{ category.name }}</a></li>
-                                {% else %}
-                                    <li><a href="{{ category.get_absolute_url }}" title="">{{ category.name }}</a></li>
-                                {% endif %}
-                            {% endfor %}
-                        </ul>
-                        {% else %}
-                    <li> <a href="{{ section.get_absolute_url }}" title="">{{ section.name }}</a>
-                {% endif %}
-            {% endfor %}
-        </ul>
-    </div>
-    <div id="sub_slider">
-        <form id="search" action="/search">
-            <input id="s" type="text" onfocus="if(this.value=='Введите слово') this.value='';" onblur="if(this.value=='') this.value='Введите слово';" value="Введите слово" name="s">
-            <input class="go" type="submit" value="">
-        </form>
-    </div>
-</div>
-<div id="content_block" class="alignleft clearfix">
-        <div id="content">
-	<div id="Breadcrumbs">
-            <a href="/">Главная</a> »&nbsp;
-            {% if product.category.all.0.section.slug == product.category.all.0.slug %}
-                <a href="/cats/{{ product.category.all.0.section.slug }}">{{ product.category.all.0.section }}</a> »&nbsp;
-            {% else %}
-                <a href="/section/{{ product.category.all.0.section.slug }}">{{ product.category.all.0.section }}</a> »&nbsp;
-                <a href="/cats/{{ product.category.all.0.slug }}">{{ product.category.all.0 }}</a> »&nbsp;
-            {% endif %}
-            {{ product }}
+
+{% cart_box request %}
+<div class="nav2">
+	<ul>
+		{% for section in sections %}
+			{% if section.slug == product.category.all.0.section.slug %}
+				<li class="active"> <a href="{{ section.get_absolute_url }}" title="">{{ section.name }}</a>
+					<ul>
+						{% for category in section.category_set.all %}
+							<li{% if category.slug == product.category.all.0.slug %} class="active"{% endif %}><a href="{{ category.get_absolute_url }}" title="">{{ category.name }}</a></li>
+						{% endfor %}
+					</ul>
+				</li>
+			{% else %}
+				<li><a href="{{ section.get_absolute_url }}" title="">{{ section.name }}</a></li>
+			{% endif %}
+		{% endfor %}
+	</ul>
+	<div class="search">
+		<form id="search" action="/search">
+			<input type="text" name="s" placeholder="Введите слово для поиска..." class="inp" />
+			<span class="btn" onclick="document.getElementById('search').submit"></span>
+		</form>
 	</div>
-	<h1 id="page_title">{{ page_title }}</h1>
-	<div id="tovar">
-		<div class="top">
-			<div class="left">
-				<div class="img_block" style="width:90%; position:relative; min-height: 380px;">
-						<i class="corns lt_corn"></i><i class="corns rt_corn"></i><i class="corns lb_corn"></i><i class="corns rb_corn"></i>
+	<i class="u"></i>
+</div>	
+<div class="content">
+	<div class="breadcrumbs br-blog">
+		<a href="/">fewline.ru</a> »&nbsp;
+		{% if product.category.all.0.section.slug == product.category.all.0.slug %}
+			<a href="/cats/{{ product.category.all.0.section.slug }}">{{ product.category.all.0.section }}</a> »&nbsp;
+		{% else %}
+			<a href="/section/{{ product.category.all.0.section.slug }}">{{ product.category.all.0.section }}</a> »&nbsp;
+			<a href="/cats/{{ product.category.all.0.slug }}">{{ product.category.all.0 }}</a> »&nbsp;
+		{% endif %}
+		{{ product }}
+	</div>
 
-
-				{% if product.productphoto_set.all.0.image.url %}
-                                            <img class="main_img_tov" class="marketfull_image" src="{{ product.productphoto_set.all.0.image.url }}" alt="{{ page_title }}" style="width:90%; margin:5%"/>
-                        	{% else %}
-                                                Фото товара отсутствует
-                        {% endif %}
-                 </div>
-				 
-			  
-                  {% if product.productphoto_set.all %}
-					{% for item in product.productphoto_set.all %}
-						<img class="prew_img_tov" src="{{ item.image.url }}" title="{{ page_title }}" alt="{{ page_title }}" width="50px" style="display:inline-block; margin:10px;"/>
-					{% endfor %}
-				 {% endif %}
-				 
-              {% for file in product.file_set.all %}
-              <div style="text-align:left"><p><a class="download_file" href="{{file.file.url}}" target="_blank">{{ file.name }}</a></p></div>
-              {% endfor %}
-			  
-				<p class="price">
-					<strong>{{ product.price }}</strong> руб.
-				</p>
-				{% if not product.in_stock %}
-                                        <p><strong><em><span style="color: #ff0000">К сожалению данная модель закончилась, но вы можете сделать предзаказ по телефону.</span></em></strong></p>
-                    {% else %}
-				 <form method="post" action="" class="cart"> {% csrf_token %}
-      											<input type="hidden" name="product_slug" value="{{ product.slug }}" id="{{ product.id }}" />
-      											<input type='image' src='{{ STATIC_URL }}res/img/buy.png' id='product_26_submit_button' class='wpsc_buy_button' name='submit'  value="Купить" />
-  				 </form>
-  				 {% endif %}
-				 
-				{% if product.html_description %}
-                    {% if product.tech_details %}
-  				<div class="bottom">
-				  <h3>Технические характеристики:</h3>
-		          {{ product.tech_details|safe }}
+	<div class="tov">
+		<h1>{{ page_title }}</h1>
+		<span class="art">&nbsp;</span>
+		<div class="img">
+			<div class="bg">
+				<div class="t">
+					<div>
+						{% if product.productphoto_set.all.0.image.url %}
+							<img src="{{ product.productphoto_set.all.0.image.url }}" alt="{{ page_title }}" />
+						{% else %}
+									Фото товара отсутствует
+						{% endif %}
+					</div>
 				</div>
-                    {% endif %}
-				{% endif %}
 			</div>
-			<div class="right">
-				{{ product.mini_html_description|safe }}<br><br>
-
-				{% if product.html_description %}
-                  {{ product.html_description|safe }}
-				{% else %}
-				  <h3>Технические характеристики:</h3>
-		          {{ product.tech_details|safe }}
-				{% endif %}
-			</div>
-
+			<span class="mask"></span>
+		</div>
+		<div class="price">
+			<span>{{ product.price }} руб.</span>
+		</div>
+		<div class="txt">
+			{{ product.mini_html_description|safe }}
+			
+			{% if product.html_description %}
+				{{ product.html_description|safe }}
+				<div class="clr"></div>
+				{% if product.tech_details %}<h3>Технические характеристики:</h3>{{ product.tech_details|safe }}<div class="clr"></div>{% endif %}
+			{% endif %}
+			
+		</div>
+		<div class="form_bott">
+			{% if product.in_stock %}
+				<form method="post" action=""> {% csrf_token %}
+					<input type="hidden" name="product_slug" value="{{ product.slug }}" id="{{ product.id }}" />
+					<input type='image' src='{{ STATIC_URL }}res2/img/btn-buy.jpg' class="btn" name='submit' value="Купить" />
+				</form>
+			{% else %}
+				<p>&nbsp;<br /><strong><em><span style="color: #ff0000">К сожалению данная модель закончилась, но вы можете сделать предзаказ по телефону.</span></em></strong></p>
+			{% endif %}
 		</div>
 	</div>
-<div class="fb-comments" data-href="ceptum.ru" data-num-posts="10" data-width="500"></div>
-    <!-- Put this script tag to the <head> of your page -->
-<script type="text/javascript" src="http://userapi.com/js/api/openapi.js?45"></script>
-
-<script type="text/javascript">
-  VK.init({apiId: 2699038, onlyWidgets: true});
-</script>
-
-<!-- Put this div tag to the place, where the Comments block will be -->
-<div id="vk_comments"></div>
-<script type="text/javascript">
-VK.Observer.subscribe('widgets.comments.new_comment', sendComment);
-VK.Widgets.Comments("vk_comments", {limit: 10, width: "496", attach: false});
-
-function sendComment(num, last_comment) {
-    $.post("/take_vk_comment", {comment: last_comment});
-}
-</script>
+	
+{% include "metrika.html" %}
+</div>
 {% endblock %}

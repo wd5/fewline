@@ -2,54 +2,51 @@
 {% load catalog_filters %}
 {% block site_wrapper %}
 {% load cart_filters  %}
-    <div id="sidebar" class="alignleft">
-        {% cart_box request %}
-        <div id="menu_block">
-            <i class="top_corn"></i>
-            <i class="bot_corn"></i>
-            <ul class="menu_sidebar">
-                {% for item in sections %}
-                    {% if item == section %}
-                        <li class="active"> <span>{{ item.name }}</span>
-                            <ul>
-                                {% for category in section.category_set.all %}
-                                    {% if category.is_active %}
-                                        <li ><a href="{{ category.get_absolute_url }}" title="">{{ category.name }}</a></li>
-                                    {% endif %}
-                                {% endfor %}
-                            </ul>
-                            {% else %}
-                        <li> <a href="{{ item.get_absolute_url }}" title="">{{ item.name }}</a>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        </div>
-        <div id="sub_slider">
-            <form id="search" action="/search">
-                <input id="s" type="text" onfocus="if(this.value=='Введите слово') this.value='';" onblur="if(this.value=='') this.value='Введите слово';" value="Введите слово" name="s">
-                <input class="go" type="submit" value="">
-            </form>
-        </div>
-    </div>
-<div id="content_block" class="alignleft clearfix">
-        <div id="content">
-		<div id="Breadcrumbs">
-                <a href="/">Главная</a> {% if section %}»&nbsp;{{ section.name }}{% else %}{% if not category.section.slug == category.slug %}»&nbsp;<a href="/cats/{{ category.section.slug }}">{{ category.section.name }}</a>{% endif %} »&nbsp;{{ category.name }} {% endif %}
-		</div>
-		<h1 id="page_title">{{ section.name }}</h1>
-		<div id="items" class="clearfix">
-			{% for cat in cats %}
-				<div class="item">
-					<div class="img_block" style="background-image: url({{ cat.image.url }})">
-						<i class="corns lt_corn"></i><i class="corns rt_corn"></i><i class="corns lb_corn"></i><i class="corns rb_corn"></i>
-						<a href="{{ cat.get_absolute_url }}"></a>
-					</div>
-				    <a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a>
-				</div>
-			{% endfor %}
-		</div>
-		<div id="cont_discr" class="clearfix">
-            {{ section.SEO_text|safe }}
-		</div>
-{% endblock %}
 
+{% cart_box request %}
+<div class="nav2">
+	<ul>
+		{% for item in sections %}
+			{% if item == section %}
+				<li class="active"><a href="{{ item.get_absolute_url }}" title="">{{ item.name }}</a>
+					<ul>
+						{% for category in section.category_set.all %}
+							{% if category.is_active %}
+								<li><a href="{{ category.get_absolute_url }}" title="">{{ category.name }}</a></li>
+							{% endif %}
+						{% endfor %}
+					</ul>
+				</li>
+			{% else %}
+				<li><a href="{{ item.get_absolute_url }}" title="">{{ item.name }}</a></li>
+			{% endif %}
+		{% endfor %}
+	</ul>
+	<div class="search">
+		<form id="search" action="/search">
+			<input type="text" name="s" placeholder="Введите слово для поиска..." class="inp" />
+			<span class="btn" onclick="document.getElementById('search').submit"></span>
+		</form>
+	</div>
+	<i class="u"></i>
+</div>
+<div class="content">
+	<div class="breadcrumbs">
+		<a href="/">fewline.ru</a> {% if section %}»&nbsp;{{ section.name }}{% else %}{% if not category.section.slug == category.slug %}»&nbsp;<a href="/cats/{{ category.section.slug }}">{{ category.section.name }}</a>{% endif %} »&nbsp;{{ category.name }} {% endif %}
+	</div>
+	
+	<h1>{{ section.name }}</h1>
+
+	<div class="cat-btns">
+		{% for cat in cats %}
+			<a href="{{ cat.get_absolute_url }}" style="background-image: url({{ cat.image.url }})"><span>{{ cat.name }}</span></a>
+		{% endfor %}
+	</div>
+	<div class="cat_seo_txt">
+		{{ section.SEO_text|safe }}
+	</div>
+	
+			
+{% include "metrika.html" %}
+</div>
+{% endblock %}

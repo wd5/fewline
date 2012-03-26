@@ -1,82 +1,86 @@
 {% extends "base.html" %}
 {% load catalog_filters %}
 {% load cart_filters  %}
-{% block site_wrapper %}	
-<div id="basket">
-	<h1>Корзина</h1>
-	<br>
-	{% if cart_items %}		
-	<a class="make_purchase back_to_shop" href="{{ request.META.HTTP_REFERER }}" style="background-image: none;">Вернуться к покупкам</a>
-	<br/><br/>
-	<p><strong>Пожалуйста, проверьте ваш заказ.</strong></p><br/>
-	<table class="productcart">
-		<tr class="firstrow">
-			<td class='firstcol'></td>
-			<td>Наименование:</td>
-			<td>Количество:</td>
-			<td>Цена:</td>
-			<td></td>
-		</tr>
-		{% for item in cart_items %}
-		<tr class="product_row">
-			<td class="firstcol"><img src='{{ item.product.thumbnail_image.url }}'  style="height:48px" /></td>
-			<td class="firstcol"><a href='{{ item.product.get_absolute_url }}'>{{ item.product.name }}</a></td><td>
-				<form action="" method="post" class="adjustform">{% csrf_token %}
-					<input class="update_win" type="text" name="quantity" value="{{ item.quantity }}" id="quantity" size="2" />
-					<input type="hidden" name="item_id" value="{{ item.id }}" />
-					<input class="update_btn" type="submit" name="Update" value="Обновить" style="background-image: none;"/>
-				</form>
-			</td>
-			<td><span class="pricedisplay">{{ item.product.price }} Руб</span></td>
-			<td>
-				<form action="#" method="post" class="adjustform">{% csrf_token %}
-					<input type="hidden" name="item_id" value="{{ item.id }}" />
-					<button class='remove_button' type="submit" name="Remove"><span>Удалить</span></button><br />
-				</form>
-			</td>
-		</tr>
-		{% endfor %}
-		<tr class="last">
-			<td></td><td></td>
-			<td>
-				Общая стоимость
-			</td>
-			<td>
-				<span class="pricedisplay checkout-total">{{ cart_subtotal }} Руб</span>
-			</td>
-			<td></td>
-		</tr>
-		<tr class="last">
-			<td></td><td></td>
-			<td>
-				Скидка
-			</td>
-			<td>
-				<span class="pricedisplay checkout-total">{{ discount }} Руб</span>
-			</td>
-			<td></td>
-		</tr>
-	</table>
-	<div>
-		<form method="post" action="" class='wpsc_checkout_forms'> {% csrf_token %}
-			<br>
-	    	<h2>Пожалуйста, заполните контактную информацию:</h2><br>
-			<p>Области, отмеченные звёздочкой, должны быть заполненны.<br><br>
-			<table class='wpsc_checkout_table'>
-			 	{{ form.as_table }}
-			 	<tr>
-			 		<td></td>
-			 		<td>
-						<input class="make_purchase" type="submit" value="Сделать заказ" name="Good" alt="сделать заказ" style="background-image: none;"/>
-					</td>
+{% block site_wrapper %}
+
+{% cart_box request %}
+{% category_list request %}
+<div class="content">
+	<div class="breadcrumbs br-blog">
+		<a href="/">fewline.ru</a> » Корзина товаров
+	</div>
+
+	<div class="cart">
+		<p>&nbsp;</p>
+		<p><a href="{{ request.META.HTTP_REFERER }}">Вернуться к покупкам</a></p>
+		<p>&nbsp;</p>
+		
+		{% if cart_items %}
+			<p>Пожалуйста, проверьте ваш заказ.</p>
+			<table cellpadding="0" cellspacing="0" class="ct">
+				<tr class="h n1">
+					<td width="100">&nbsp;</td>
+					<td>Наименование:</td>
+					<td width="190">Количество:</td>
+					<td width="120">Цена:</td>
+					<td width="80">&nbsp;</td>
+				</tr>
+				{% for item in cart_items %}
+					<tr>
+						<td align="center"><img src='{{ item.product.thumbnail_image.url }}'  style="height:48px" /></td>
+						<td><a href='{{ item.product.get_absolute_url }}'>{{ item.product.name }}</a></td>
+						<td>
+							<form action="" method="post" class="adjustform">{% csrf_token %}
+								<input class="inp_t" type="text" name="quantity" value="{{ item.quantity }}" id="quantity" size="2" />
+								<input type="hidden" name="item_id" value="{{ item.id }}" />
+								<input class="submit" type="submit" name="Update" value="Обновить" />
+							</form>
+						</td>
+						<td>{{ item.product.price }} Руб</td>
+						<td>
+							<form action="#" method="post" class="adjustform">{% csrf_token %}
+								<input type="hidden" name="item_id" value="{{ item.id }}" />
+								<button class='submit' type="submit" name="Remove"><span>Удалить</span></button><br />
+							</form>
+						</td>
+					</tr>
+				{% endfor %}
+				<tr class="h">
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>Общая стоимость</td>
+					<td>{{ cart_subtotal }} Руб</td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr class="h">
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>Скидка </td>
+					<td>{{ discount }} Руб</td>
+					<td>&nbsp;</td>
 				</tr>
 			</table>
-  		</form>
+			&nbsp;<br />&nbsp;
+			<h2>Пожалуйста, заполните контактную информацию:</h2>
+			<p><i>*Области, отмеченные звёздочкой, должны быть заполненны.</i></p>
+			<form method="post" action="" id="cart_main_form"> {% csrf_token %}
+				<table cellpadding="0" cellspacing="0" class="cf">
+					{{ form.as_table }}
+				</table>
+				<div class="form_bott">
+					<input type="hidden" value="Сделать заказ" name="Good" />
+					<div class="btn btn2" onclick="document.getElementById('cart_main_form').submit()"></div>
+				</div>
+			</form>
+		{% else %}
+			{% if is_order %}
+				<p>Спасибо за заказ, в ближайшее время мы с вами свяжемся.</p>
+			{% else %}
+				<p>Ваша корзина пуста.</p>
+			{% endif %}
+		{% endif %}					
 	</div>
-	{% else %}{% if is_order %}
-				Спасибо за заказ, в ближайшее время мы с вами свяжемся.
-	{% else %}
-		Ваша корзина пуста.
-	{% endif %}{% endif %}					
-</div> 
-{% endblock %}    
+
+{% include "metrika.html" %}
+</div>
+{% endblock %}

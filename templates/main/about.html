@@ -2,11 +2,15 @@
 {% load catalog_filters %}
 {% load cart_filters  %}
 {% block site_wrapper %}
-{% category_list request %}
-<div id="content_block" class="alignleft clearfix">
-        <div id="content">
-	<div id="page" class="fix">
-        <center><h1>О нас</h1></center>
+
+	{% cart_box request %}
+	{% category_list request %}
+	<div class="content">
+		<div class="breadcrumbs">
+			<a href="/">fewline.ru</a> » О нас
+		</div>
+
+        <h1>О нас</h1>
         Мы верим в то, что можно делать бизнес честно, не обманывать на завышенных сметах, продаже ненужного оборудования, несуществующего
         программного обеспечения, и мы не выставляем огромные цены за монтаж прикрываясь сложностью настройки оборудования.<br><br>
         К сожалению на рынке видеонаблюдения постоянно обманывают клиентов, <strong>наше конкурентное преимущество - честность!</strong><br>
@@ -26,5 +30,7 @@
         Банк: "БАНК24.РУ"(ОАО), ЕКАТЕРИНБУРГ<br>
         Кор.счет: 30101810600000000859<br>
         БИК: 046577859<br>
-	</div>
+		
+{% include "metrika.html" %}
+</div>
 {% endblock %}
