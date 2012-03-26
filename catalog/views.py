@@ -58,8 +58,13 @@ def show_product(request, product_slug):
     return render_to_response("main/tovar.html", locals(), context_instance=RequestContext(request))
 
 def search(request):
-    search_world = request.GET['s']
-    products = Product.objects.filter(name__contains=search_world)
+    if request.method == 'POST':
+        cart.add_to_cart(request)
+        url = urlresolvers.reverse('show_cart')
+        return HttpResponseRedirect(url)
+    else:
+        search_world = request.GET['s']
+        products = Product.objects.filter(name__contains=search_world)
     return render_to_response("main/search_result.html", locals(), context_instance=RequestContext(request))
 
 def about(request):
