@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="ru-RU">
+<head>
+	<link rel="stylesheet" href="{{ STATIC_URL }}css/admin.css" type="text/css" media="screen" />
+    <link href="{{ STATIC_URL }}css/chosen.css" rel="stylesheet" type="text/css" />
+	<script type='text/javascript' src='{{ STATIC_URL }}js/jquery-1.7.1.min.js'></script>
+    <script src='{{ STATIC_URL }}js/chosen.jquery.min.js'></script>
+	<script type='text/javascript'>
+        /* Ajax Django CSRF */
+        $(document).ajaxSend(function(event, xhr, settings) {
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie != '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            function sameOrigin(url) {
+                // url could be relative or scheme relative or absolute
+                var host = document.location.host; // host + port
+                var protocol = document.location.protocol;
+                var sr_origin = '//' + host;
+                var origin = protocol + sr_origin;
+                // Allow absolute or scheme relative URLs to same origin
+                return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+                        (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+                    // or any other URL that isn't scheme relative or absolute i.e relative.
+                        !(/^(\/\/|http:|https:).*/.test(url));
+            }
+            function safeMethod(method) {
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
+
+            if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+            }
+        });
+        jQuery(document).ready(function(){
+            $(".chzn-select").chosen();
+			//alert('!');
+			jQuery('#allsales .clientinfo:even td, #client_edit_form_table tr:even td, #client_edit_form_table tr:even th, #task_chat_in tr:even td').css({background:'#ebf1fe'});
+			jQuery('#allsales .clientadress:even td, #client_edit_form_table tr:even td, #client_edit_form_table tr:even th').css({background:'#ebf1fe'});
+			jQuery('.all').click(function(){
+				if(jQuery(this).hasClass('active')){
+					jQuery('.'+(jQuery(this).attr('id'))).removeAttr("checked");
+					jQuery(this).removeClass('active');
+				}else{
+					jQuery('.'+(jQuery(this).attr('id'))).attr("checked","checked");
+					jQuery(this).addClass('active');
+				}
+			});
+			jQuery('#id_client-status, #id_client-status').ready(function(){
+				if(jQuery(this).find('option').eq('2').attr('selected')){
+					jQuery('#id_sms_status, #id_client-sms_status').parents('tr').show().end().find('option').eq('1').attr('selected','selected');
+				}else{
+					jQuery('#id_sms_status, #id_client-sms_status').parents('tr').hide();
+				}
+			});
+			jQuery('#id_status, #id_client-status').change(function(){
+				if(jQuery(this).val()=='POSTSENDED'){
+					jQuery('#id_sms_status, #id_client-sms_status').parents('tr').show().end().find('option').eq('1').attr('selected','selected');
+				} else{
+					jQuery('#id_sms_status, #id_client-sms_status').parents('tr').hide();
+				}
+			});
+        });
+	</script>
+</head>
+<body>
+        {% block site_wrapper %}
+        {% endblock %}
+</body>
+</html>
