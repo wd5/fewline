@@ -12,9 +12,9 @@
 		<div class="cat-btns">
 			{% for section in sections %}
 	            {% if not section.category_set.all.0.name == section.name %}
-					<a href="{{ section.get_absolute_url }}" style="background-image: url({{ section.image.url }})"><span>{{ section.name }}</span></a>
+					<a href="{{ section.get_absolute_url }}" style="background-size: cover; background: url({{ section.image.url }}) no-repeat center center"><span>{{ section.name }}</span></a>
 	            {% else %}
-					<a href="{{ section.category_set.all.0.get_absolute_url }}" style="background-image: url({{ section.image.url }})"><span>{{ section.name }}</span></a>
+					<a href="{{ section.category_set.all.0.get_absolute_url }}" style="background-size: cover; background: url({{ section.image.url }}) no-repeat center center"><span>{{ section.name }}</span></a>
 	            {% endif %}
 			{% endfor %}
 		</div>

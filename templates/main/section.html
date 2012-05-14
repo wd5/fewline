@@ -39,7 +39,7 @@
 
 	<div class="cat-btns">
 		{% for cat in cats %}
-			<a href="{{ cat.get_absolute_url }}" style="background-image: url({{ cat.image.url }})"><span>{{ cat.name }}</span></a>
+			<a href="{{ cat.get_absolute_url }}" style="background-size: cover; background: url({{ cat.image.url }}) no-repeat center center"><span>{{ cat.name }}</span></a>
 		{% endfor %}
 	</div>
 	<div class="cat_seo_txt">
